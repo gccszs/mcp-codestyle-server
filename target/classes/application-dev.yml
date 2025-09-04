@@ -1,0 +1,10 @@
+server:
+  port: 8090
+
+spring:
+  ai:
+    mcp:
+      server:
+        name: mcp-codestyle-server # 服务器名称
+        version: 0.0.1 # 服务器版本
+        stdio: true # 启用stdio模式

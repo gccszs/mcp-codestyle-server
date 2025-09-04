@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: mcp-codestyle-server
+  main:
+    web-application-type: none
+    banner-mode: off
+  #  默认 dev 环境
+  profiles:
+    active: dev
