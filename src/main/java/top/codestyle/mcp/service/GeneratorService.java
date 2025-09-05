@@ -89,7 +89,35 @@ public class GeneratorService {
      */
     @Tool(name = "get-code-template", description = "获取Code模板")
     public String getCodeTemplate() {
-        return null;
+        String codeTemplate = """
+package ${packageName}.${subPackageName};
+
+import top.continew.starter.extension.crud.enums.Api;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+import org.springframework.web.bind.annotation.*;
+
+import top.continew.starter.extension.crud.annotation.CrudRequestMapping;
+import top.air.backend.common.base.BaseController;
+import ${packageName}.model.query.${classNamePrefix}Query;
+import ${packageName}.model.req.${classNamePrefix}Req;
+import ${packageName}.model.resp.${classNamePrefix}DetailResp;
+import ${packageName}.model.resp.${classNamePrefix}Resp;
+import ${packageName}.service.${classNamePrefix}Service;
+
+/**
+ * ${businessName}管理 API
+ *
+ * @author ${author}
+ * @since ${datetime}
+ */
+@Tag(name = "${businessName}管理 API")
+@RestController
+@CrudRequestMapping(value = "/${apiModuleName}/${apiName}", api = {Api.PAGE, Api.DETAIL, Api.ADD, Api.UPDATE, Api.DELETE, Api.EXPORT})
+public class ${className} extends BaseController<${classNamePrefix}Service, ${classNamePrefix}Resp, ${classNamePrefix}DetailResp, ${classNamePrefix}Query, ${classNamePrefix}Req> {}
+        """.strip();
+        return codeTemplate;
     }
 
     /**
@@ -97,7 +125,27 @@ public class GeneratorService {
      */
     @Tool(name = "get-sql-template", description = "获取SQL模板")
     public String getSqlTemplate() {
-        return null;
+        String SQLTemplate = """
+-- ${businessName}管理菜单
+INSERT INTO `sys_menu`
+(`title`, `parent_id`, `type`, `path`, `name`, `component`, `redirect`, `icon`, `is_external`, `is_cache`, `is_hidden`, `permission`, `sort`, `status`, `create_user`, `create_time`, `update_user`, `update_time`)
+VALUES
+('${businessName}管理', 1000, 2, '/${apiModuleName}/${apiName}', '${classNamePrefix}', '${apiModuleName}/${apiName}/index', NULL, NULL, b'0', b'0', b'0', NULL, 1, 1, 1, NOW(), NULL, NULL);
+
+SET @parentId = LAST_INSERT_ID();
+
+-- ${businessName}管理按钮
+INSERT INTO `sys_menu`
+(`title`, `parent_id`, `type`, `path`, `name`, `component`, `redirect`, `icon`, `is_external`, `is_cache`, `is_hidden`, `permission`, `sort`, `status`, `create_user`, `create_time`, `update_user`, `update_time`)
+VALUES
+('列表', @parentId, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '${apiModuleName}:${apiName}:list', 1, 1, 1, NOW(), NULL, NULL),
+('详情', @parentId, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '${apiModuleName}:${apiName}:detail', 2, 1, 1, NOW(), NULL, NULL),
+('新增', @parentId, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '${apiModuleName}:${apiName}:add', 3, 1, 1, NOW(), NULL, NULL),
+('修改', @parentId, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '${apiModuleName}:${apiName}:update', 4, 1, 1, NOW(), NULL, NULL),
+('删除', @parentId, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '${apiModuleName}:${apiName}:delete', 5, 1, 1, NOW(), NULL, NULL),
+('导出', @parentId, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '${apiModuleName}:${apiName}:export', 6, 1, 1, NOW(), NULL, NULL);      
+        """.strip();
+        return SQLTemplate;
     }
 
     /**
@@ -112,11 +160,12 @@ public class GeneratorService {
      * 供测试用
      */
     @Tool(name = "get-weather", description = "Get weather information by city name.")
-    public String getWeather(ToolReq cityName) {
+    public String getWeather(ToolReq toolReq) {
         ToolResp result = null;
         try {
             result = new ToolResp();
-            result.setToolParamInfo(cityName.getToolParamInfo());
+            result.setToolParamInfo(toolReq.getToolParamInfo());
+            result.setToolParamInfo("晴天！");
             log.info("mcp server run getWeather, result = {}", result);
         } catch (Exception e) {
             log.error("call mcp server failed, e:\n", e);

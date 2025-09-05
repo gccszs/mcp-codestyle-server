@@ -11,7 +11,7 @@
     </parent>
     <groupId>top.codestyle.mcp</groupId>
     <artifactId>mcp-codestyle-server</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>mcp-codestyle-server</name>
     <description>mcp-codestyle-server</description>
     <properties>
