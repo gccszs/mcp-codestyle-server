@@ -1,9 +1,0 @@
-spring:
-  application:
-    name: mcp-codestyle-server
-  main: # 不启动web服务，并且关闭web启动时候的横幅
-    web-application-type: none
-    banner-mode: off
-  #  默认 dev 环境
-  profiles:
-    active: dev
