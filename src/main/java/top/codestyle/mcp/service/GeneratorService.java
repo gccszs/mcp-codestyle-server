@@ -37,6 +37,17 @@ public class GeneratorService {
     private final ProjectProperties projectProperties;
 
     /**
+     * 初始化Init
+     */
+    @Tool(name = "")
+    public void init() {
+        // 1.获取项目配置
+        ProjectProperties projectProperties = this.projectProperties;
+        // 2.获取生成器配置
+        GeneratorProperties generatorProperties = this.generatorProperties;
+    }
+
+    /**
      * TODO
      */
     @Tool(name = "get-tablemeta-sql-by-tablename", description = "根据表名获取表元数据SQL")
@@ -65,6 +76,7 @@ public class GeneratorService {
      */
     @Tool(name = "get-field-config-by-table-info", description = "根据表信息获取字段配置")
     public String getFieldConfigByTableInfo(@ToolParam(description = "表配置") Table table, @ToolParam(description = "databaseProductName ") String databaseProductName ) {
+
         String result = null;
         List<FieldConfigDO> fieldConfigList = new ArrayList<>();
         // 1.获取数据表列信息
@@ -179,39 +191,43 @@ public class ${className} extends BaseController<${classNamePrefix}Service, ${cl
         return codeTemplate;
     }
 
-    /**
-     * TODO 获取SQL模板
-     */
-    @Tool(name = "get-sql-template", description = "获取SQL模板")
-    public String getSqlTemplate() {
-        String SQLTemplate = """
--- ${businessName}管理菜单
-INSERT INTO `sys_menu`
-(`title`, `parent_id`, `type`, `path`, `name`, `component`, `redirect`, `icon`, `is_external`, `is_cache`, `is_hidden`, `permission`, `sort`, `status`, `create_user`, `create_time`, `update_user`, `update_time`)
-VALUES
-('${businessName}管理', 1000, 2, '/${apiModuleName}/${apiName}', '${classNamePrefix}', '${apiModuleName}/${apiName}/index', NULL, NULL, b'0', b'0', b'0', NULL, 1, 1, 1, NOW(), NULL, NULL);
-
-SET @parentId = LAST_INSERT_ID();
-
--- ${businessName}管理按钮
-INSERT INTO `sys_menu`
-(`title`, `parent_id`, `type`, `path`, `name`, `component`, `redirect`, `icon`, `is_external`, `is_cache`, `is_hidden`, `permission`, `sort`, `status`, `create_user`, `create_time`, `update_user`, `update_time`)
-VALUES
-('列表', @parentId, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '${apiModuleName}:${apiName}:list', 1, 1, 1, NOW(), NULL, NULL),
-('详情', @parentId, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '${apiModuleName}:${apiName}:detail', 2, 1, 1, NOW(), NULL, NULL),
-('新增', @parentId, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '${apiModuleName}:${apiName}:add', 3, 1, 1, NOW(), NULL, NULL),
-('修改', @parentId, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '${apiModuleName}:${apiName}:update', 4, 1, 1, NOW(), NULL, NULL),
-('删除', @parentId, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '${apiModuleName}:${apiName}:delete', 5, 1, 1, NOW(), NULL, NULL),
-('导出', @parentId, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '${apiModuleName}:${apiName}:export', 6, 1, 1, NOW(), NULL, NULL);      
-        """.strip();
-        return SQLTemplate;
-    }
+//    /**
+//     * TODO 获取SQL模板
+//     */
+//    @Tool(name = "get-sql-template", description = "获取SQL模板")
+//    public String getSqlTemplate() {
+//        String SQLTemplate = """
+//-- ${businessName}管理菜单
+//INSERT INTO `sys_menu`
+//(`title`, `parent_id`, `type`, `path`, `name`, `component`, `redirect`, `icon`, `is_external`, `is_cache`, `is_hidden`, `permission`, `sort`, `status`, `create_user`, `create_time`, `update_user`, `update_time`)
+//VALUES
+//('${businessName}管理', 1000, 2, '/${apiModuleName}/${apiName}', '${classNamePrefix}', '${apiModuleName}/${apiName}/index', NULL, NULL, b'0', b'0', b'0', NULL, 1, 1, 1, NOW(), NULL, NULL);
+//
+//SET @parentId = LAST_INSERT_ID();
+//
+//-- ${businessName}管理按钮
+//INSERT INTO `sys_menu`
+//(`title`, `parent_id`, `type`, `path`, `name`, `component`, `redirect`, `icon`, `is_external`, `is_cache`, `is_hidden`, `permission`, `sort`, `status`, `create_user`, `create_time`, `update_user`, `update_time`)
+//VALUES
+//('列表', @parentId, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '${apiModuleName}:${apiName}:list', 1, 1, 1, NOW(), NULL, NULL),
+//('详情', @parentId, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '${apiModuleName}:${apiName}:detail', 2, 1, 1, NOW(), NULL, NULL),
+//('新增', @parentId, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '${apiModuleName}:${apiName}:add', 3, 1, 1, NOW(), NULL, NULL),
+//('修改', @parentId, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '${apiModuleName}:${apiName}:update', 4, 1, 1, NOW(), NULL, NULL),
+//('删除', @parentId, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '${apiModuleName}:${apiName}:delete', 5, 1, 1, NOW(), NULL, NULL),
+//('导出', @parentId, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '${apiModuleName}:${apiName}:export', 6, 1, 1, NOW(), NULL, NULL);
+//        """.strip();
+//        return SQLTemplate;
+//    }
 
     /**
      * TODO 获取模板对外部依赖版本进行的限制列表
      */
     @Tool(name = "get-template-dependency-versions", description = "获取模板对外部依赖版本进行的限制列表")
-    public String getTemplateDependencyVersions() {
+    public String getTemplateDependencyVersions(String dependencyName) {
+        String templateDependencyVersions = """
+            {
+            }
+        """;
         return null;
     }
 
