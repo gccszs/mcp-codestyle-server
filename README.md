@@ -6,6 +6,30 @@ Codestyle 是国内首家兼容MCP协议的面试刷题网站。关于MCP协议�
 
 以下会给更出详细的适配说明。
 
+## 技术栈
+- Spring Boot
+- Spring AI MCP Server
+- Spring Web (用于 HTTP 客户端)
+- Model Context Protocol (MCP)
+
+## 项目结构
+```angular2html
+starter-stdio-server/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── org/springframework/ai/mcp/sample/server/
+│   │   │       ├── McpServerApplication.java  # 应用程序入口
+│   │   │       └── OpenMeteoService.java      # 天气服务实现
+│   │   └── resources/
+│   │       └── application.properties         # 应用配置
+│   └── test/
+│       └── java/
+│           └── org/springframework/ai/mcp/sample/client/
+│               └── ClientStdio.java           # 客户端测试类
+└── pom.xml                                    # Maven 配置
+```
+
 ## 工具列表
 
 #### 题目搜索 `xxxx`
