@@ -1,9 +1,22 @@
+server:
+  port: 8090
+
 spring:
   application:
     name: mcp-codestyle-server
   main: # 不启动web服务，并且关闭web启动时候的横幅
     web-application-type: none
     banner-mode: off
-  #  默认 dev 环境
-  profiles:
-    active: dev
+  ai:
+    mcp:
+      server:
+        name: mcp-codestyle-server # 服务器名称
+        version: 0.0.1 # 服务器版本
+        stdio: true # 启用stdio模式
+
+# 缓存配置
+cache:
+  # 基础路径，可通过JVM参数 -Dcache.base-path=自定义路径 覆盖
+  base-path: ${java.io.tmpdir}
+  # 缓存目录配置
+  cache-dir: ${cache.base-path}/codestyle-cache
