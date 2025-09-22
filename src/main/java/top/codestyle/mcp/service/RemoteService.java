@@ -21,7 +21,7 @@ public class RemoteService {
         return templateInfos;
     }
 
-    private static List<TemplateInfo> createExampleTemplateInfos() {
+    public static List<TemplateInfo> createExampleTemplateInfos() {
         List<TemplateInfo> templateInfos = new ArrayList<>();
         templateInfos.add(createExampleTemplateInfo());
         return templateInfos;
@@ -64,7 +64,7 @@ public class RemoteService {
         templateInfo.setTags(Arrays.asList("crud", "增删改查"));
         
         // 设置其他字段
-        templateInfo.setSha256("d41d8cd98f00b204e9800998ecf8427e");
+        templateInfo.setSha256("d41d8cd98f00b204e9800998ecf8427e.ftl");
         // 读取templates下的Java/Controller.java.ftl文件内容
         String content = FileUtil.readUtf8String("templates/java/Controller.ftl");
         templateInfo.setContent(content);

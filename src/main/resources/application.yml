@@ -24,3 +24,5 @@ cache:
   lru:
     max-size: 10000      # 内存 LRU 最大条目数
     concurrency-level: 16
+file-server:
+  base-url: file:///C:/Users/LENOVO/AppData/Local/Temp   # 注意三个斜杠

@@ -10,7 +10,10 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 
 @Slf4j
@@ -42,29 +45,49 @@ public class FileServerClient {
      */
     public boolean download(String sha256, Path targetPath) {
         String url = baseUrl + "/" + sha256;
+        URI uri = URI.create(url);
+
+        /* 1. 本地 file 协议 */
+        if ("file".equalsIgnoreCase(uri.getScheme())) {
+            try {
+                Path src = Paths.get(uri);   // file:///C:/xxx/123456
+                if (Files.exists(src)) {
+                    Files.copy(src, targetPath, StandardCopyOption.REPLACE_EXISTING);
+                    log.info("本地 file 协议复制成功 {} -> {}", src, targetPath);
+                    return true;
+                }
+                log.warn("本地 file 源文件不存在 {}", src);
+                return false;
+            } catch (IOException e) {
+                log.error("file 协议复制失败", e);
+                return false;
+            }
+        }
+
+        /* 2. 远程 http/https 协议 */
+        if (!"http".equalsIgnoreCase(uri.getScheme()) &&
+                !"https".equalsIgnoreCase(uri.getScheme())) {
+            log.error("不支持的协议 {}", uri.getScheme());
+            return false;
+        }
+
+        // 下面是你原来的 HttpClient 逻辑
         for (int i = 0; i <= maxRetries; i++) {
             try {
                 HttpRequest req = HttpRequest.newBuilder()
-                        .uri(URI.create(url))
+                        .uri(uri)
                         .timeout(Duration.ofSeconds(10))
                         .GET()
                         .build();
-
-                // 把响应直接写入文件
-                HttpResponse<Path> resp = http.send(req,
-                        HttpResponse.BodyHandlers.ofFile(targetPath));
-
+                HttpResponse<Path> resp =
+                        http.send(req, HttpResponse.BodyHandlers.ofFile(targetPath));
                 if (resp.statusCode() == 200) {
-                    log.info("成功下载 {} -> {}", url, targetPath);
+                    log.info("http 下载成功 {}", uri);
                     return true;
                 }
-                if (resp.statusCode() == 404) {
-                    log.warn("服务器不存在文件 {}", sha256);
-                    return false;
-                }
-                log.warn("下载 {} 返回异常状态码 {}", url, resp.statusCode());
-            } catch (IOException | InterruptedException e) {
-                log.warn("第 {} 次下载 {} 失败: {}", i + 1, url, e.getMessage());
+                if (resp.statusCode() == 404) return false;
+            } catch (Exception e) {
+                log.warn("第 {} 次下载失败 {}", i + 1, e.getMessage());
             }
         }
         return false;
