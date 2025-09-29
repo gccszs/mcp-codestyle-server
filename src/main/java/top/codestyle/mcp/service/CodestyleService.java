@@ -19,17 +19,17 @@ public class CodestyleService {
      * 静态变量
      */
     public final static String PROMPT_TEMPLATE = """
-            #目录树：
-            ```
-            %s
-            ```
-            #变量说明：
-            ```
-            %s
-            ```
-            #详细模板：
-            %s
-            """.strip();
+#目录树：
+```
+%s
+```
+#变量说明：
+```
+%s
+```
+#详细模板：
+%s
+""".strip();
 
 //    public static String merge(List<TemplateInfo> templateInfos) {
 //        TreeNode treeNode;
