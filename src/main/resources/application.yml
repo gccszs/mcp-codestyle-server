@@ -13,16 +13,10 @@ spring:
         name: mcp-codestyle-server # 服务器名称
         version: 0.0.1 # 服务器版本
         stdio: true # 启用stdio模式
-file-server:
-  # 注意三个斜杠
-  # 仓库配置
-  repository:
-    # 本地基础路径，可通过JVM参数 -Dcache.base-path=自定义路径 覆盖
-    # 这里命名是为了后期团队协作，私有化远程仓库用
-    local-path: 'D:\IPBD\cangku'
-    remote-path: http://xxxxxxx # 这里默认是咱们的共有文件服务器地址
+# 仓库配置
+repository:
+  # 本地基础路径，可通过JVM参数 -Dcache.base-path=自定义路径 覆盖
+  local-path: ${java.io.tmpdir} # 本地仓库地址
+  remote-path: http://xxxxxxx  # 默认是公有服务器地址
   # 仓库目录配置
-    dir: ${cache.base-path}/codestyle-cache
-
-cache:
-  base-path: D:/IPBD/cangku
+  dir: ${cache.base-path}/codestyle-cache

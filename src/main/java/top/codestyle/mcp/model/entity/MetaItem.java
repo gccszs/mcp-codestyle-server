@@ -14,4 +14,3 @@ public  class MetaItem {
     private List<MetaVariable> inputVarivales;
     private String sha256;
 }
-

@@ -2,8 +2,7 @@
 
 ## 简介
 
-Codestyle 是国内首家兼容MCP协议的面试刷题网站。关于MCP协议，详见MCP官方[文档](https://modelcontextprotocol.io/)。依赖`MCP Java SDK`开发，任意支持MCP协议的智能体助手（如`Claude`、`Cursor`以及`千帆AppBuilder`等）都可以快速接入。
-
+这是一个基于 Spring Boot 开发的代码风格模板管理服务，主要用于检索、管理和提供代码风格模板，支持本地缓存和远程仓库交互。
 以下会给更出详细的适配说明。
 
 ## 技术栈
@@ -14,20 +13,20 @@ Codestyle 是国内首家兼容MCP协议的面试刷题网站。关于MCP协议�
 
 ## 项目结构
 ```angular2html
-starter-stdio-server/
-├── src/
-│   ├── main/
-│   │   ├── java/
-│   │   │   └── org/springframework/ai/mcp/sample/server/
-│   │   │       ├── McpServerApplication.java  # 应用程序入口
-│   │   │       └── OpenMeteoService.java      # 天气服务实现
-│   │   └── resources/
-│   │       └── application.properties         # 应用配置
-│   └── test/
-│       └── java/
-│           └── org/springframework/ai/mcp/sample/client/
-│               └── ClientStdio.java           # 客户端测试类
-└── pom.xml                                    # Maven 配置
+src/main/java/top/codestyle/mcp/
+├── McpServerApplication.java    # 应用入口
+├── config/                      # 配置类
+│   ├── CacheConfig.java         # 缓存配置
+│   └── ToolCallbackProviderConfig.java
+├── model/                       # 数据模型
+│   ├── entity/                  # 实体类
+│   ├── req/                     # 请求类
+│   └── resp/                    # 响应类
+├── service/                     # 业务服务
+│   ├── CodestyleService.java    # 代码风格核心服务
+│   └── RemoteService.java       # 远程服务模拟
+└── util/                        # 工具类
+└── SDKUtil.java
 ```
 
 ## 工具列表

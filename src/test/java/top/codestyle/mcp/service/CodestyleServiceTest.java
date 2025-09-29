@@ -56,17 +56,4 @@ class CodestyleServiceTest {
 
         client.closeGracefully();
     }
-    @Autowired
-    private CodestyleService codestyleService;
-    @Test
-    void codestyleSearch() throws IOException {
-        String s = CodestyleService.codestyleSearch("1");
-        List<TemplateInfo> templateInfos = createExampleTemplateInfos();
-//        System.out.println(s);
-        List<TemplateInfo> templates = codestyleService.loadFromLocalRepo(templateInfos);
-        templates.forEach(t -> {
-            System.out.println("文件名：" + t.getFilename());
-            System.out.println("内容：" + t.getContent());
-        });
-    }
 }
