@@ -1,26 +1,29 @@
-package top.codestyle.mcp.service;
+package top.codestyle.mcp.util;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import top.codestyle.mcp.model.entity.InputVariable;
-import top.codestyle.mcp.model.entity.TemplateInfo;
-
+import top.codestyle.mcp.model.sdk.InputVariable;
+import top.codestyle.mcp.model.sdk.TemplateInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 /**
- * 模拟远程服务
- *
- * @author 文艺倾年
- * @since 2025/9/12
+ * 远程文件工具类
  */
-public class RemoteService {
+public class SDKUtils {
 
-    public static List<TemplateInfo> codestyleSearch(String templateName) {
-        // 1.匹配算法检索模板(远程做)
-        // 2.检索到后进行组装TemplateInfo，然后进行返回给MCP工具
+    /**
+     * 根据模板文件信息，拉取模板内容
+     */
+    public static TemplateInfo downloadFile(TemplateInfo req) {
+        // 远程拉取文件
+        return null;
+    }
+
+    /**
+     * 根据任务检索到对应的模板信息
+     */
+    public static List<TemplateInfo> search(String searchText) {
+        // 远程拉取对应的模板信息
         List<TemplateInfo> templateInfos = createExampleTemplateInfos();
         return templateInfos;
     }
@@ -79,7 +82,7 @@ public class RemoteService {
     }
 
     public static void main(String[] args)  {
-        List<TemplateInfo> templateInfos = codestyleSearch("Controller.java.ftl");
+        List<TemplateInfo> templateInfos = search("Controller.java.ftl");
         for (TemplateInfo templateInfo : templateInfos) {
             System.out.println(templateInfo);
         }

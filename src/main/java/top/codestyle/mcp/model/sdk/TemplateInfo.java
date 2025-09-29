@@ -1,9 +1,13 @@
-package top.codestyle.mcp.model.entity;
+package top.codestyle.mcp.model.sdk;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+
+/**
+ * 变量未来要和远程保持同步
+ */
 @Data
 @NoArgsConstructor
 public class TemplateInfo {

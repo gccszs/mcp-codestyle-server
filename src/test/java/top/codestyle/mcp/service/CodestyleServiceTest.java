@@ -5,16 +5,9 @@ import io.modelcontextprotocol.client.McpClient;
 import io.modelcontextprotocol.client.transport.ServerParameters;
 import io.modelcontextprotocol.client.transport.StdioClientTransport;
 import io.modelcontextprotocol.spec.McpSchema;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import top.codestyle.mcp.model.entity.TemplateInfo;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.Map;
-
-import static top.codestyle.mcp.service.RemoteService.createExampleTemplateInfos;
 
 /**
  * 使用stdio传输，MCP服务器由客户端自动启动

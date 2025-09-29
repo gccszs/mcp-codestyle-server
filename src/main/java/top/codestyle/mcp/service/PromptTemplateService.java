@@ -1,9 +1,9 @@
-package top.codestyle.mcp.config;
+package top.codestyle.mcp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -14,8 +14,8 @@ import java.nio.file.Paths;
  * 提示词模板加载器
  * 使用懒加载模式从文件中读取提示词模板
  */
-@Component
-public class PromptTemplateLoader {
+@Service
+public class PromptTemplateService {
 
     private static final String PROMPT_TEMPLATE_PATH = "classpath:prompt.txt";
 
@@ -29,7 +29,7 @@ public class PromptTemplateLoader {
      * 获取提示词模板
      * 使用双重检查锁定模式确保线程安全和高性能
      */
-    public String getPromptTemplate() {
+    private String getPromptTemplate() {
         // 第一次检查，避免不必要的同步
         if (promptTemplate == null) {
             synchronized (this) {
@@ -53,5 +53,11 @@ public class PromptTemplateLoader {
             // 如果文件加载失败，使用默认模板作为备用
             return "#目录树：\n```\n%s\n```\n#变量说明：\n```\n%s\n```\n#详细模板：\n%s";
         }
+    }
+
+    // 通过加载器获取提示词模板
+    public String buildPrompt(Object... params) {
+        // 使用加载器获取模板并格式化
+        return String.format(getPromptTemplate(), params);
     }
 }

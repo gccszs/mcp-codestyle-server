@@ -1,7 +1,7 @@
 package top.codestyle.mcp.util;
 
-import top.codestyle.mcp.model.entity.TemplateInfo;
-import top.codestyle.mcp.model.entity.TreeNode;
+import top.codestyle.mcp.model.sdk.TemplateInfo;
+import top.codestyle.mcp.model.TreeNode;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.Map;
  * 提示词工具类
  * 提供模板处理相关的通用工具方法
  */
-public class TemplateUtils {
+public class PromptUtils {
     /**
      * 根据模板信息列表构建目录树
      */
@@ -75,5 +75,9 @@ public class TemplateUtils {
         StringBuilder sb = new StringBuilder();
         vars.forEach((k, v) -> sb.append("- " + k + ": " + v + '\n'));
         return sb.toString();
+    }
+
+    public static void main(String[] args) {
+        System.out.println("test");
     }
 }

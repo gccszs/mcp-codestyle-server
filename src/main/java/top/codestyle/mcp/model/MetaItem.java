@@ -1,4 +1,4 @@
-package top.codestyle.mcp.model.entity;
+package top.codestyle.mcp.model;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import java.util.List;
 
 
 @Data
-public  class MetaItem {
+public class MetaItem {
     private String filePath;
     private String version;
     private String description;
