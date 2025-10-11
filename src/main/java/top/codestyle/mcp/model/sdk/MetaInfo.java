@@ -19,5 +19,7 @@ public class MetaInfo {
     private String version; //版本号: v1.0.0
     private String filename; // 模板名称：Controller.java.ftl
     private String filePath; // 模板目录；/src/main/java/com/air/controller
+
+    private  String path; // 模板路径；/src/main/java/com/air/controller/Controller.java.ftl
     private List<MetaVariable> metaVariables; // 模板变量说明；
 }

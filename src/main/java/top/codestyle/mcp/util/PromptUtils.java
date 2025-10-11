@@ -89,19 +89,21 @@ public class PromptUtils {
      */
     public static String buildTemplatesStr(List<LocalMetaInfo> loadTemplateFile) {
         StringBuilder detailTemplates = new StringBuilder();
-        for (MetaInfo metaInfo : metaInfos) {
-            detailTemplates.append("```\n").append(metaInfo.getContent() != null ? metaInfo.getContent() : "").append("\n```\n");
+        for (LocalMetaInfo metaInfo :loadTemplateFile) {
+            detailTemplates.append("```\n").append(metaInfo.getTemplateContent() != null ? metaInfo.getTemplateContent() : "").append("\n```\n");
         }
         String detailTemplatesStr = detailTemplates.toString().trim();
         // 2.3加载模板变量
         Map<String, String> vars = new LinkedHashMap<>();
-        for (MetaInfo n : metaInfos) {
-            if (n.getInputVarivales() == null) continue;
-            for (MetaVariable v : n.getInputVarivales()) {
+        for (MetaInfo n : loadTemplateFile) {
+            if (n.getMetaVariables() == null) continue;
+            for (MetaVariable v : n.getMetaVariables()) {
                 String desc = String.format("%s[%s]", v.getVariableComment(), v.getVariableType());
                 vars.putIfAbsent(v.getVariableName(), desc);
             }
         }
-        String inputVariables = PromptUtils.buildVarString(vars).trim();
+        String Variables = PromptUtils.buildVarString(vars).trim();
+        return Variables + detailTemplatesStr;
     }
+
 }

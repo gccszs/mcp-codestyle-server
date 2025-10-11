@@ -7,12 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.codestyle.mcp.config.RepositoryConfig;
 import top.codestyle.mcp.model.meta.LocalMetaInfo;
-import top.codestyle.mcp.model.sdk.MetaVariable;
 import top.codestyle.mcp.model.sdk.MetaInfo;
+import top.codestyle.mcp.model.sdk.MetaVariable;
 import top.codestyle.mcp.util.SDKUtils;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -63,7 +62,8 @@ public class TemplateService {
             LocalMetaInfo meta = null;                 // 用来承载命中 meta 的那一行
             if (Files.exists(metaFile)) {
                 List<LocalMetaInfo> items = objectMapper.readValue(metaFile.toFile(),
-                        new TypeReference<List<LocalMetaInfo>>() {});
+                        new TypeReference<List<LocalMetaInfo>>() {
+                        });
                 // 按 filename 快速查找
                 meta = items.stream()
                         .filter(it -> it.getFilename().equalsIgnoreCase(req.getFilename()))
@@ -86,17 +86,17 @@ public class TemplateService {
 
                 // 变量转换
                 List<MetaVariable> vars = new ArrayList<>();
-                for (top.codestyle.mcp.model.meta.LocalMetaVariable mv : meta.getInputVarivales()) {
+                for (top.codestyle.mcp.model.meta.LocalMetaVariable mv : meta.getLocalMetaVariables()) {
                     MetaVariable v = new MetaVariable();
                     v.variableName = mv.getVariableName().replace("变量名：", "").trim();
                     v.variableType = mv.getVariableType().replace("变量类型：", "").trim();
                     v.variableComment = mv.getVariableComment();
                     vars.add(v);
                 }
-                out.setInputVarivales(vars);
+                out.setMetaVariables(vars);
 
                 // 读内容
-                out.setContent(Files.readString(repo.resolve(meta.getFilename()), StandardCharsets.UTF_8));
+//                out.setContent(Files.readString(repo.resolve(meta.getFilename()), StandardCharsets.UTF_8));
             } else {
                 /* ===== 本地未命中，去文件服务器拉取 ===== */
                 out = SDKUtils.downloadFile(req, repositoryConfig.getRemotePath());

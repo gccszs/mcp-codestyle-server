@@ -74,7 +74,7 @@ public class SDKUtils {
             classNamePrefixVar.setVariableComment("实体类命名前缀（驼峰式，如：Order）"+name);
             metaVariables.add(classNamePrefixVar);
         }
-        metaInfo.setInputVarivales(metaVariables);
+        metaInfo.setMetaVariables(metaVariables);
 
         // 设置其他字段
         metaInfo.setSha256("d41d8cd98f00b204e9800998ecf8427e");
