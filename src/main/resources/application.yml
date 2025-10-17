@@ -16,7 +16,9 @@ spring:
 # 仓库配置
 repository:
   # 本地基础路径，可通过JVM参数 -Dcache.base-path=自定义路径 覆盖
-  local-path: ${java.io.tmpdir} # 本地仓库地址
+  #local-path: ${java.io.tmpdir} # 本地仓库地址
+  local-path: D://IPBD//cangku
   remote-path: http://xxxxxxx  # 默认是公有服务器地址
   # 仓库目录配置
-  dir: ${repository.local-path}/codestyle-cache
+#  dir: ${repository.local-path}/codestyle-cache
+  dir: D:\IPBD\cangku/codestyle-cache

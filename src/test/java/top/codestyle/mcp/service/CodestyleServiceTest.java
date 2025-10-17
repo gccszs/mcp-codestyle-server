@@ -22,13 +22,14 @@ class CodestyleServiceTest {
 
     public static void main(String[] args) {
 
-        String Root_Path = "E:/kaiyuan/mcp-codestyle-server";
+        String Root_Path = "D:/IPBD/mcp-codestyle-server";
 
         var stdioParams = ServerParameters.builder("java")
                 .args("-jar",
                         "-Dspring.ai.mcp.server.stdio=true",
                         "-Dspring.main.web-application-type=none",
                         "-Dlogging.pattern.console=",
+                        "-Dfile.encoding=UTF-8",
                         Root_Path + "/target/mcp-codestyle-server-0.0.1.jar")
                 .build();
 
@@ -39,13 +40,13 @@ class CodestyleServiceTest {
 
         // 列出并展示可用的工具
         McpSchema.ListToolsResult toolsList = client.listTools();
-        System.out.println("可用工具 = " + toolsList);
+        System.err.println("可用工具 = " + toolsList);
 
         // 获取模板
         McpSchema.CallToolResult codestyle = client.callTool(
                 new McpSchema.CallToolRequest("get-codestyle",
                 Map.of("searchText", "CRUD")));
-        System.out.println("代码模板: " + codestyle);
+        System.err.println("代码模板: " + codestyle);
 
         client.closeGracefully();
     }

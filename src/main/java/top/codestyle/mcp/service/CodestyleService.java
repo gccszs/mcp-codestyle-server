@@ -9,15 +9,13 @@ import top.codestyle.mcp.model.meta.LocalMetaInfo;
 import top.codestyle.mcp.model.sdk.MetaInfo;
 import top.codestyle.mcp.model.tree.TreeNode;
 import top.codestyle.mcp.util.PromptUtils;
-import java.util.*;
+
+import java.util.List;
 
 @Slf4j
 @Service
 public class CodestyleService {
 
-    // 提示词管理
-    @Autowired
-    private PromptService promptTemplateService;
 
     // 模板服务
     @Autowired
@@ -26,8 +24,9 @@ public class CodestyleService {
     /**
      * 根据任务名称搜索模板库中的代码风格模板
      */
-    @Tool(name = "get-codestyle-template", description = "根据任务名称搜索模板库中的代码风格模板（每次操作代码时需要先检索相关代码风格模板）")
+    @Tool(name = "get-codestyle", description = "根据任务名称搜索模板库中的代码风格模板（每次操作代码时需要先检索相关代码风格模板）")
     public String codestyleSearch(@ToolParam(description = "searchText") String searchText) {
+        log.info("get-codestyle searchText={},", searchText);
         // 1.根据任务名称检索模板库
         List<MetaInfo> metaInfos = templateService.search(searchText);
         // 2.处理templateInfos, 得到提示词：目录树、模板信息：模板变量+模板内容
@@ -37,7 +36,13 @@ public class CodestyleService {
         // TODO 2.2加载模板内容:填充对应的 templateContent 字段
         List<LocalMetaInfo> loadTemplateFile = templateService.loadTemplateFile(metaInfos);
         String templatesStr = PromptUtils.buildTemplatesStr(loadTemplateFile);
+//        String s = promptTemplateService.buildPrompt(rootTreeInfo, templatesStr);
+
         // 3.组装，构建提示词
-        return promptTemplateService.buildPrompt(rootTreeInfo, templatesStr);
+        return String.format("""
+                #目录树
+                %s
+                #模板详细内容
+                %s""", rootTreeInfo, templatesStr);
     }
 }

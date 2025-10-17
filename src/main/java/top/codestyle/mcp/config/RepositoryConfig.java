@@ -67,7 +67,7 @@ public class RepositoryConfig {
     public Path repositoryDirectory() {
         // 记录当前操作系统类型
         String osName = System.getProperty("os.name").toLowerCase();
-        System.out.println("当前操作系统: " + osName);
+//        System.err.println("当前操作系统: " + osName);
         try {
             // 规范化路径，确保跨平台兼容性
             String normalizedRepoDir = normalizePath(repositoryDir);
@@ -78,7 +78,7 @@ public class RepositoryConfig {
                 Files.createDirectories(repoPath);
             }
 
-            System.out.println("仓库目录已创建: " + repoPath.toAbsolutePath());
+            System.err.println("仓库目录已创建: " + repoPath.toAbsolutePath());
             return repoPath;
         } catch (Exception e) {
             // 如果创建失败，使用系统临时目录作为备选

@@ -8,15 +8,15 @@ import java.util.List;
 
 @Data
 public class LocalMetaInfo extends MetaInfo {
-    private Long id; // ID
-    private String version; //版本号: v1.0.0
-    private String groupId; //组织名: artboy
-    private String artifactId; //模板组：CRUD
-    private String filePath;
-    private String description;
-    private String filename;
-    private List<LocalMetaVariable> localMetaVariables;
-    private String sha256;
+//    private Long id; // ID
+//    private String version; //版本号: v1.0.0
+//    private String groupId; //组织名: artboy
+//    private String artifactId; //模板组：CRUD
+//    private String filePath;
+//    private String description;
+//    private String filename;
+//    private String sha256;
+//private List<LocalMetaVariable> localMetaVariables;
     /**
      * 模板内容
      */
