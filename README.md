@@ -1,4 +1,4 @@
-# 代码模板服务器 - Codestyle Server MCP
+# Codestyle Server MCP【码蜂】
 
 Codestyle Server MCP 是一个基于 Spring AI 实现的 Model Context Protocol (MCP) 服务器，为 IDE 和 AI 代理提供代码模板搜索和检索工具。该服务从本地缓存查找模板，并在缺失时自动从远程仓库下载元数据和文件进行修复。
 
