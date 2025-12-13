@@ -13,15 +13,13 @@ spring:
         version: 1.0.0 # 服务器版本
         type: SYNC # 服务器类型: SYNC(同步) 或 ASYNC(异步)
         stdio: true # 启用stdio模式
-        annotation-scanner:
-          enabled: true # 启用注解扫描
 # 仓库配置
 repository:
   # 本地基础路径，可通过JVM参数 -Dcache.base-path=自定义路径 覆盖
   # 示例: java -Dcache.base-path=/custom/path -jar app.jar
-  local-path: /var/cache/codestyle # 默认本地路径
-  remote-path: http://localhost # 远程仓库地址
+  local-path: D:/cache/codestyle # 默认本地路径
+  remote-path: http://localhost:8080 # 远程仓库地址
   # 仓库目录配置(可选,不配置则自动使用 local-path/codestyle-cache)
   dir: /var/cache/codestyle/codestyle-cache
   # 是否启用远程检索(默认false,使用本地Lucene检索)
-  remote-search-enabled: false
+  remote-search-enabled: true

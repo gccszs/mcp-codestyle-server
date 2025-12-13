@@ -102,13 +102,13 @@ public class SDKUtils {
      * 从远程仓库获取元配置
      *
      * @param remoteBaseUrl   远程仓库基础URL
-     * @param templateKeyword 模板关键词,如: RuoYi, CRUD
+     * @param query 模板关键词,如: RuoYi, CRUD
      * @return 远程模板配置,失败返回null
      */
-    public static RemoteMetaConfig fetchRemoteMetaConfig(String remoteBaseUrl, String templateKeyword) {
+    public static RemoteMetaConfig fetchRemoteMetaConfig(String remoteBaseUrl, String query) {
         try {
             String responseBody = HttpRequest.get(remoteBaseUrl + "/api/mcp/search")
-                    .form("templateKeyword", templateKeyword)
+                    .form("query", query)
                     .timeout(30000)
                     .header("User-Agent", "MCP-CodeStyle-Server/1.0")
                     .execute()

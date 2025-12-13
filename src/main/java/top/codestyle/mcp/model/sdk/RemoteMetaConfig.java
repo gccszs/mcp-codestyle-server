@@ -66,7 +66,7 @@ public class RemoteMetaConfig {
         /**
          * 输入变量列表
          */
-        private List<MetaVariable> inputVarivales;
+        private List<MetaVariable> metaVariables;
         
         /**
          * 文件SHA256哈希值

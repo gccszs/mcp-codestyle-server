@@ -15,7 +15,7 @@ import java.nio.file.Paths;
  * 仓库配置类
  * 管理仓库路径和缓存目录配置
  *
- * @author 小航love666, Kanttha, movclantian
+ * @author 小航love666, Kanttha, movclantian chonghaoGao
  * @since 2025-09-29
  */
 @Configuration
