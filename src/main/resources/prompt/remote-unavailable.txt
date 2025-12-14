@@ -1,0 +1,8 @@
+远程仓库不可访问,无法获取模板"%{s}"的信息。
+
+建议尝试以下模板提示词：
+【后端】CRUD, controller, service, mapper, entity
+【前端】CRUD, index, form, modal
+【通用】bankend, frontend
+
+请检查模板提示词是否正确，或联系管理员

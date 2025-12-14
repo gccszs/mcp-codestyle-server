@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springaicommunity.mcp.annotation.McpTool;
 import org.springaicommunity.mcp.annotation.McpToolParam;
 import org.springframework.stereotype.Service;
+import top.codestyle.mcp.config.RepositoryConfig;
 import top.codestyle.mcp.model.meta.LocalMetaInfo;
 import top.codestyle.mcp.model.sdk.MetaInfo;
 import top.codestyle.mcp.model.sdk.RemoteMetaConfig;
@@ -11,9 +12,7 @@ import top.codestyle.mcp.model.tree.TreeNode;
 import top.codestyle.mcp.util.PromptUtils;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 代码模板搜索和内容获取服务
@@ -28,84 +27,78 @@ public class CodestyleService {
     private final TemplateService templateService;
     private final PromptService promptService;
     private final LuceneIndexService luceneIndexService;
+    private final RepositoryConfig repositoryConfig;
 
     /**
      * 搜索代码模板
-     * 根据模板提示词搜索模板信息,返回目录树和模板组介绍
-     * 支持本地Lucene检索和远程检索两种模式
+     * <p>根据模板提示词搜索模板信息，返回目录树和模板组介绍。
+     * 支持本地Lucene检索和远程检索两种模式。
      *
-     * @param templateKeyword 模板提示词,如: CRUD, backend, frontend等
-     * @return 模板目录树和描述信息
+     * @param templateKeyword 模板提示词，支持关键词或 groupId/artifactId 格式，如: CRUD, backend, frontend, continew/DatabaseConfig
+     * @return 模板目录树和描述信息字符串
      */
     @McpTool(name = "codestyleSearch", description = """
             根据模板提示词搜索代码模板库，返回匹配的模板目录树和模板组介绍。
+            支持以下搜索格式：
+            1. 关键词搜索：CRUD, frontend, backend 等
+            2. 精确搜索：groupId/artifactId 格式
             """)
     public String codestyleSearch(
-            @McpToolParam(description = "模板提示词，如: CRUD, bankend, frontend等") String templateKeyword) {
+            @McpToolParam(description = "模板提示词或 groupId/artifactId，如: CRUD, bankend, frontend, continew/DatabaseConfig") String templateKeyword) {
         try {
-            String groupId;
-            String artifactId;
-            String description;
-
+            // 远程检索模式
             if (templateService.isRemoteSearchEnabled()) {
-                // 远程检索模式
                 RemoteMetaConfig remoteConfig = templateService.fetchRemoteMetaConfig(templateKeyword);
 
                 if (remoteConfig == null) {
-                    return """
-                            远程仓库不可访问,无法获取模板"%s"的信息。
-
-                            建议尝试以下模板提示词：
-                            【后端】CRUD, controller, service, mapper, entity
-                            【前端】CRUD, index, form, modal
-                            【通用】bankend, frontend
-
-                            请检查模板提示词是否正确，或联系管理员
-                            """.formatted(templateKeyword);
+                    return promptService.buildRemoteUnavailable(templateKeyword);
                 }
 
-                // 同步检查并更新本地仓库(必须等待下载完成才能构建目录树)
                 templateService.smartDownloadTemplate(remoteConfig);
 
-                groupId = remoteConfig.getGroupId();
-                artifactId = remoteConfig.getArtifactId();
-                description = remoteConfig.getDescription();
-            } else {
-                // 本地Lucene检索模式
-                LuceneIndexService.SearchResult searchResult = luceneIndexService.fetchLocalMetaConfig(templateKeyword);
+                String groupId = remoteConfig.getGroupId();
+                String artifactId = remoteConfig.getArtifactId();
+                String description = remoteConfig.getDescription();
 
-                if (searchResult == null) {
-                    return """
-                            本地仓库未找到匹配的模板"%s"。
-
-                            建议尝试以下模板提示词：
-                            【后端】CRUD, controller, service, mapper, entity
-                            【前端】CRUD, index, form, modal
-                            【通用】增删改查, 代码生成
-
-                            如需从远程获取模板,请设置
-                            repository.remote-search-enabled=true
-                            """.formatted(templateKeyword);
+                List<MetaInfo> metaInfos = templateService.searchLocalRepository(groupId, artifactId);
+                if (metaInfos.isEmpty()) {
+                    return "本地仓库模板文件不完整,请检查模板目录";
                 }
 
-                groupId = searchResult.groupId();
-                artifactId = searchResult.artifactId();
-                description = searchResult.description();
+                TreeNode treeNode = PromptUtils.buildTree(metaInfos);
+                String treeStr = PromptUtils.buildTreeStr(treeNode, "").trim();
+                return promptService.buildSearchResult(artifactId, treeStr, description);
             }
 
-            // 从本地仓库搜索匹配的模板元信息
-            List<MetaInfo> metaInfos = templateService.searchLocalRepository(groupId, artifactId);
+            // 本地Lucene全文检索模式
+            List<LuceneIndexService.SearchResult> searchResults = luceneIndexService.fetchLocalMetaConfig(templateKeyword);
+
+            if (searchResults.isEmpty()) {
+                return promptService.buildLocalNotFound(repositoryConfig.getRepositoryDir(), templateKeyword);
+            }
+
+            // 检查是否为同一groupId的多个模板（命名空间搜索）
+            if (templateService.isGroupIdSearch(searchResults)) {
+                return templateService.buildGroupAggregatedResult(templateKeyword, searchResults);
+            }
+
+            // 处理多个不同模板的情况（让AI选择）
+            if (searchResults.size() > 1) {
+                return templateService.buildMultiResultResponse(templateKeyword, searchResults);
+            }
+
+            // 单模板结果
+            LuceneIndexService.SearchResult searchResult = searchResults.get(0);
+            List<MetaInfo> metaInfos = templateService.searchLocalRepository(
+                    searchResult.groupId(), searchResult.artifactId());
 
             if (metaInfos.isEmpty()) {
                 return "本地仓库模板文件不完整,请检查模板目录";
             }
 
-            // 构建模板目录树结构
             TreeNode treeNode = PromptUtils.buildTree(metaInfos);
             String treeStr = PromptUtils.buildTreeStr(treeNode, "").trim();
-
-            // 格式化并返回搜索结果
-            return promptService.buildSearchResult(templateKeyword, treeStr, description);
+            return promptService.buildSearchResult(searchResult.artifactId(), treeStr, searchResult.description());
         } catch (Exception e) {
             return "模板搜索失败: " + e.getMessage();
         }
@@ -113,16 +106,18 @@ public class CodestyleService {
 
     /**
      * 获取模板文件内容
-     * 根据模板文件路径获取详细内容,包括变量说明和模板代码
+     * <p>根据完整的模板文件路径获取详细内容，包括变量说明和模板代码
      *
-     * @param templatePath 模板文件路径,如:
-     *                     backend/CRUD/1.0.0/src/main/java/com/air/controller/Controller.ftl
-     * @return 模板文件的详细信息(变量+内容)
+     * @param templatePath 完整模板文件路径（包含版本号和.ftl扩展名），如: backend/CRUD/1.0.0/src/main/java/com/air/controller/Controller.ftl
+     * @return 模板文件的详细信息字符串（包含变量说明和模板内容）
      * @throws IOException 文件读取异常
      */
-    @McpTool(name = "getTemplateByPath", description = "传入模板文件路径,获取模板文件的详细内容(包括变量说明和模板代码)")
+    @McpTool(name = "getTemplateByPath", description = """
+            传入完整的模板文件路径（必须包含版本号和.ftl扩展名），获取模板文件的详细内容(包括变量说明和模板代码)。
+            注意：不是 groupId/artifactId 格式，而是完整的文件路径。
+            """)
     public String getTemplateByPath(
-            @McpToolParam(description = "模板文件路径,如:backend/CRUD/1.0.0/src/main/java/com/air/controller/Controller.ftl") String templatePath)
+            @McpToolParam(description = "完整模板文件路径（必须包含版本号和.ftl），如: backend/CRUD/1.0.0/src/main/java/com/air/controller/Controller.ftl") String templatePath)
             throws IOException {
 
         // 使用精确路径搜索模板
