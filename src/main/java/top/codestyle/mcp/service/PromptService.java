@@ -20,17 +20,27 @@ import java.util.regex.Matcher;
 @Service
 public class PromptService {
 
-    private static final String CONTENT_RESULT_TEMPLATE_PATH = "classpath:content-result.txt";
-    private static final String SEARCH_RESULT_TEMPLATE_PATH = "classpath:search-result.txt";
+    private static final String CONTENT_RESULT_TEMPLATE_PATH = "classpath:prompt/content-result.txt";
+    private static final String SEARCH_RESULT_TEMPLATE_PATH = "classpath:prompt/search-result.txt";
+    private static final String REMOTE_UNAVAILABLE_TEMPLATE_PATH = "classpath:prompt/remote-unavailable.txt";
+    private static final String LOCAL_NOT_FOUND_TEMPLATE_PATH = "classpath:prompt/local-not-found.txt";
+    private static final String MULTI_RESULT_TEMPLATE_PATH = "classpath:prompt/multi-result.txt";
+    private static final String GROUP_AGGREGATED_TEMPLATE_PATH = "classpath:prompt/group-aggregated.txt";
 
     @Autowired
     private ResourceLoader resourceLoader;
 
     private volatile String contentResultTemplate;
     private volatile String searchResultTemplate;
+    private volatile String remoteUnavailableTemplate;
+    private volatile String localNotFoundTemplate;
+    private volatile String multiResultTemplate;
+    private volatile String groupAggregatedTemplate;
 
     /**
      * 线程安全懒加载模板内容模板
+     *
+     * @return 模板内容字符串
      */
     private String getContentResultTemplate() {
         if (contentResultTemplate == null) {
@@ -45,6 +55,8 @@ public class PromptService {
 
     /**
      * 线程安全懒加载搜索结果模板
+     *
+     * @return 搜索结果模板字符串
      */
     private String getSearchResultTemplate() {
         if (searchResultTemplate == null) {
@@ -55,6 +67,70 @@ public class PromptService {
             }
         }
         return searchResultTemplate;
+    }
+
+    /**
+     * 线程安全懒加载远程不可用模板
+     *
+     * @return 远程不可用模板字符串
+     */
+    private String getRemoteUnavailableTemplate() {
+        if (remoteUnavailableTemplate == null) {
+            synchronized (this) {
+                if (remoteUnavailableTemplate == null) {
+                    remoteUnavailableTemplate = loadTemplate(REMOTE_UNAVAILABLE_TEMPLATE_PATH);
+                }
+            }
+        }
+        return remoteUnavailableTemplate;
+    }
+
+    /**
+     * 线程安全懒加载本地未找到模板
+     *
+     * @return 本地未找到模板字符串
+     */
+    private String getLocalNotFoundTemplate() {
+        if (localNotFoundTemplate == null) {
+            synchronized (this) {
+                if (localNotFoundTemplate == null) {
+                    localNotFoundTemplate = loadTemplate(LOCAL_NOT_FOUND_TEMPLATE_PATH);
+                }
+            }
+        }
+        return localNotFoundTemplate;
+    }
+
+    /**
+     * 线程安全懒加载多结果模板
+     *
+     * @return 多结果模板字符串
+     */
+    private String getMultiResultTemplate() {
+        if (multiResultTemplate == null) {
+            synchronized (this) {
+                if (multiResultTemplate == null) {
+                    multiResultTemplate = loadTemplate(MULTI_RESULT_TEMPLATE_PATH);
+                }
+            }
+        }
+        return multiResultTemplate;
+    }
+
+    /**
+     * 线程安全懒加载分组聚合模板
+     *
+     * @return 分组聚合模板字符串
+     */
+    private String getGroupAggregatedTemplate() {
+        if (groupAggregatedTemplate == null) {
+            synchronized (this) {
+                if (groupAggregatedTemplate == null) {
+                    groupAggregatedTemplate = loadTemplate(GROUP_AGGREGATED_TEMPLATE_PATH);
+                }
+            }
+        }
+        return groupAggregatedTemplate;
     }
 
     /**
@@ -100,6 +176,52 @@ public class PromptService {
     }
 
     /**
+     * 构建远程不可用消息
+     *
+     * @param templateKeyword 模板关键词
+     * @return 格式化后的消息
+     */
+    public String buildRemoteUnavailable(String templateKeyword) {
+        return buildFromTemplate(getRemoteUnavailableTemplate(), templateKeyword);
+    }
+
+    /**
+     * 构建本地未找到消息
+     *
+     * @param repositoryPath 仓库路径
+     * @param templateKeyword 模板关键词
+     * @return 格式化后的消息
+     */
+    public String buildLocalNotFound(String repositoryPath, String templateKeyword) {
+        return buildFromTemplate(getLocalNotFoundTemplate(), repositoryPath, templateKeyword);
+    }
+
+    /**
+     * 构建多结果响应
+     *
+     * @param count           结果数量
+     * @param keyword         搜索关键词
+     * @param resultList      结果列表字符串
+     * @param exampleArtifact 示例artifactId
+     * @return 格式化后的消息
+     */
+    public String buildMultiResult(String count, String keyword, String resultList, String exampleArtifact) {
+        return buildFromTemplate(getMultiResultTemplate(), count, keyword, resultList, exampleArtifact);
+    }
+
+    /**
+     * 构建分组聚合结果
+     *
+     * @param groupId       组ID
+     * @param count         模板组数量
+     * @param artifactList  模板组列表
+     * @return 格式化后的描述
+     */
+    public String buildGroupAggregated(String groupId, String count, String artifactList) {
+        return buildFromTemplate(getGroupAggregatedTemplate(), groupId, count, artifactList);
+    }
+
+    /**
      * 从模板构建内容
      *
      * @param template 模板内容
@@ -127,6 +249,9 @@ public class PromptService {
 
     /**
      * 统计模板中%{s}占位符的数量
+     *
+     * @param template 模板字符串
+     * @return 占位符数量
      */
     private static int countPlaceholder(String template) {
         int count = 0, idx = 0;
