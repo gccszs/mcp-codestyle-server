@@ -16,7 +16,7 @@ Codestyle Server MCP 是一个基于 Spring AI 实现的 Model Context Protocol 
 ## 技术栈
 
 - Java 17, Maven 3.9+
-- Spring Boot 3.2.5
+- Spring Boot 3.4.3
 - Spring AI MCP Server 1.1.0
 - Apache Lucene 9.12.3（本地全文检索引擎，支持中文分词）
 - Hutool 5.8.42（HTTP、文件、JSON、ZIP 工具）
