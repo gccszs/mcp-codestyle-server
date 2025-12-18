@@ -164,7 +164,7 @@ public class MetaInfoConvertUtil {
                 localFile.setFilename(remoteFile.getFilename());
                 localFile.setDescription(remoteFile.getDescription());
                 localFile.setSha256(remoteFile.getSha256());
-                localFile.setInputVariables(remoteFile.getMetaVariables());
+                localFile.setInputVariables(remoteFile.getInputVariables());
                 localFiles.add(localFile);
             }
         }
