@@ -176,7 +176,7 @@ repository:
            "filePath": "/src/main/java/com/air/controller",
            "filename": "Controller.ftl",
            "description": "控制器模板",
-           "sha256": "abc123...",
+           "sha256": "abc123.",
            "inputVariables": [
              {
                "variableName": "className",
