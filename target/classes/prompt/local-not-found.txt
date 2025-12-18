@@ -1,9 +1,0 @@
-本地仓库%{s}未找到匹配的模板"%{s}"。
-
-建议尝试以下模板提示词：
-【后端】CRUD, controller, service, mapper, entity
-【前端】CRUD, index, form, modal
-【通用】增删改查, 代码生成
-
-如需从远程获取模板,请设置
-repository.remote-search-enabled=true
