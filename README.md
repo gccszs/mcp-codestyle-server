@@ -279,13 +279,13 @@ java \
 }
 ```
 
-![打开Cherry Studio](img/image.png)
+![打开Cherry Studio](../../java_projects/mcp-codestyle-server/img/image.png)
 注意实际 jar 路径和参数配置一致
-![添加Json导入MCP](img/image-1.png)
+![添加Json导入MCP](../../java_projects/mcp-codestyle-server/img/image-1.png)
 添加成功
-![成功添加](img/image-2.png)
+![成功添加](../../java_projects/mcp-codestyle-server/img/image-2.png)
 通过配置按钮可以查看到两个工具已注册
-![查看已注册工具](img/image-3.png)
+![查看已注册工具](../../java_projects/mcp-codestyle-server/img/image-3.png)
 
 #### Cursor 配置示例
 
@@ -309,7 +309,7 @@ java \
 }
 ```
 
-![在cursor中添加MCP](img/image-4.png)
+![在cursor中添加MCP](../../java_projects/mcp-codestyle-server/img/image-4.png)
 启用服务器后，在聊天界面即可调用工具。
 
 ## MCP 工具

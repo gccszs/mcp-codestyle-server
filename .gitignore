@@ -1,4 +1,4 @@
-target/
+../../java_projects/mcp-codestyle-server/target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
